@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import User
 
-@admin.register(CustomUser)
+@admin.register(User)
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_dispaly = ('email', 'role', 'address', 'company_name', 'contact_details', 'is_active', 'created_date'),

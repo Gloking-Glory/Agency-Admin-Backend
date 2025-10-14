@@ -102,7 +102,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'emailbackend.urls'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [ "http://localhost:3000" ]
-AUTH_USER_MODEL = 'userapp.CustomUser'
+AUTH_USER_MODEL = 'userapp.User'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

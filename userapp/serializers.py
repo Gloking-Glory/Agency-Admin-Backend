@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from userapp.models import CustomUser
+from userapp.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.ChoiceField(
-        choices=[choice[0] for choice in CustomUser._meta.get_field('role').choices], # pylint: disable=no-member, protected-access
+        choices=[choice[0] for choice in User._meta.get_field('role').choices], # pylint: disable=no-member, protected-access
         required=True,
         error_messages={
             "required": 'Role is required',
@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ["id", "role", "email", "company_name", "address", "contact_details", "password", "date_joined"]
         extra_kwargs = {
             'password': { 'write_only': True },
@@ -50,7 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
         password = validated_data.pop('password')
-        user = CustomUser(**validated_data)
+        user = User(**validated_data)
         user.set_password(password)
         user.save()
         return user

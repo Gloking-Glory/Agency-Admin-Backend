@@ -7,13 +7,13 @@ from userapp.serializers import UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class CreateUserView(APIView):
-    permission_classes = [permissions.AllowAny]  # Allow any user to access this view
+    permission_classes = [permissions.AllowAny]  # Allows any user to access this view
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
-            print(serializer.validated_data)
+            # print(serializer.validated_data)
             user = serializer.save()
 
             return Response({
