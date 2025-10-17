@@ -41,13 +41,13 @@ class UserSerializer(serializers.ModelSerializer):
                 missing_fields.append("company_name")
             if not attrs.get("address"):
                 missing_fields.append("address")
-            
+
             if missing_fields:
                 raise serializers.ValidationError(f"Missing required fields: {', '.join(missing_fields)}")
-        
+
         return attrs
 
-        
+
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
