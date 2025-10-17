@@ -4,8 +4,14 @@ from userapp.models import User
 class AgencyProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'company_name', 'address', 'contact_details', 'date_joined']
-        read_only_fields = ['id', 'email', 'date_joined']
+        fields = ['id', 'email', 'company_name', 'address', 'contact_details', 'is_active']
+        read_only_fields = ['id', 'email', 'is_active']
+    
+    # validation in serializer
+    # def validate_company_name(self, value):
+    #     if len(value) < 3:
+    #         raise serializers.ValidationError('Company name must be at least 3 characters long.')
+    #     return value
 
     def validate(self, attrs):
         company_name = attrs.get('company_name')

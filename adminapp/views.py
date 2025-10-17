@@ -27,6 +27,15 @@ class AdminUserListView(generics.ListAPIView):
 
         return queryset.order_by('-date_joined')
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response({
+            'count': response.data.get('count'),
+            'next': response.data.get('next'),
+            'previous': response.data.get('previous'),
+            'results': response.data.get('results')
+        })
+
 class AdminEditUserView(generics.RetrieveUpdateAPIView):
     # admin -- edit user info ---- GET/PUT/PATCH /api/admin/users/<id>/
     serializer_class = AdminEditUserSerializer
@@ -55,10 +64,10 @@ class AdminDeleteUserView(generics.DestroyAPIView):
     #     instance.save()
 
     # customize delete response
-    # def delete(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     instance.delete()
-    #     return Response({"detail": "User deleted successfully"}, status=200)
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({"message": "User deleted successfully"}, status=200)
 
 
 class AdminSummaryView(APIView):
