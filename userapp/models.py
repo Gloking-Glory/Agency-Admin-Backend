@@ -37,6 +37,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
+    # adding constraint for database sut still return default response
+    # constraints = [
+    #     models.UniqueConstraint(
+    #         fields=['course_title', 'university'],
+    #         name='unique_course_title_university'
+    #     )
+    # ]
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = "email"

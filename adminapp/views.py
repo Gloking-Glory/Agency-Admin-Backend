@@ -87,3 +87,16 @@ class AdminSummaryView(APIView):
             'total_admins': total_admins,
             'date_added': date_added
         })
+
+
+# deletion - this is correct too especially if want to customize response after delete
+# class CourseDeleteView(generics.DestroyAPIView):
+#     queryset = Course.objects.all()
+#     serializer_class = CourseSerializer
+#     lookup_field = 'id'
+
+#     def destroy(self, request, *args, **kwargs):
+#         super().destroy(request, *args, **kwargs)
+#         return Response({
+#             'message': 'Course deleted successfully'
+#         }, status=status.HTTP_200_OK)
