@@ -13,20 +13,36 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from django.conf import settings
 from pathlib import Path
-
+import dj_database_url
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+if os.path.exists(BASE_DIR / ".env"):
+    load_dotenv(BASE_DIR / ".env")
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rs3tc^^&fza8=+p9y0e*^n!!%n3fp)8h!it6$!j6f0^5f7z6&8'
+# SECRET_KEY = 'django-insecure-rs3tc^^&fza8=+p9y0e*^n!!%n3fp)8h!it6$!j6f0^5f7z6&8'
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+CORS_ALLOWED_ORIGINS = [
+    origin.strip() for origin in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') 
+    if origin.strip() and ('://' in origin.strip() or '.' in origin.strip())
+]
+# ALLOWED_HOSTS = [host.strip() for host in os.getenv("ALLOWED_HOSTS", "").split(",") if host.strip()]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") + ["*"]
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+# DEBUG = True
+# ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -101,9 +117,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+
 ROOT_URLCONF = 'emailbackend.urls'
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [ "http://localhost:3000" ]
 AUTH_USER_MODEL = 'userapp.User'
 TEMPLATES = [
     {
@@ -126,12 +146,17 @@ WSGI_APPLICATION = 'emailbackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.getenv("USE_POSTGRES", "False") == "True":
+    DATABASES = {
+        "default": dj_database_url.parse(os.getenv("DATABASE_URL"), conn_max_age=600)
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
